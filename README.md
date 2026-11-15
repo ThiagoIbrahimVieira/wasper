@@ -1,26 +1,13 @@
-# WASPER — Ditado por Voz Push-to-Talk 100% Local
+# WASPER
 
-<p align="center">
-  <a href="https://github.com/ThiagoIbrahimVieira/wasper/stargazers"><img src="https://img.shields.io/github/stars/ThiagoIbrahimVieira/wasper?style=for-the-badge&logo=github&color=amber&labelColor=141418" alt="GitHub Stars" /></a>
-  <a href="https://github.com/ThiagoIbrahimVieira/wasper/network/members"><img src="https://img.shields.io/github/forks/ThiagoIbrahimVieira/wasper?style=for-the-badge&logo=github&color=zinc&labelColor=141418" alt="GitHub Forks" /></a>
-  <a href="https://www.python.org/"><img src="https://img.shields.io/badge/Python-3.10+-3776AB?style=for-the-badge&logo=python&logoColor=white&labelColor=141418" alt="Python 3.10+" /></a>
-  <a href="https://developer.nvidia.com/cuda-toolkit"><img src="https://img.shields.io/badge/NVIDIA-CUDA_float16-76B900?style=for-the-badge&logo=nvidia&logoColor=white&labelColor=141418" alt="CUDA float16" /></a>
-  <a href="https://doc.qt.io/qtforpython-6/"><img src="https://img.shields.io/badge/GUI-PySide6_Liquid_Glass-41CD52?style=for-the-badge&logo=qt&logoColor=white&labelColor=141418" alt="PySide6 Liquid Glass" /></a>
-  <a href="https://github.com/SYSTRAN/faster-whisper"><img src="https://img.shields.io/badge/AI-faster--whisper_large--v3--turbo-orange?style=for-the-badge&logo=openai&logoColor=white&labelColor=141418" alt="Whisper large-v3-turbo" /></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue?style=for-the-badge&labelColor=141418" alt="License: MIT" /></a>
-</p>
+> **Ditado por voz Push-to-Talk 100% local e offline no Windows com Whisper (CUDA float16) e PySide6.**
 
-<p align="center">
-  <a href="#-como-fazer-funcionar">
-    <img src="https://img.shields.io/badge/⚡_COMO_FAZER_FUNCIONAR-QUICKSTART-fbbf24?style=for-the-badge&labelColor=0a0a0c" alt="Como Fazer Funcionar" />
-  </a>
-  <a href="#-arquitetura-e-estrutura-de-arquivos">
-    <img src="https://img.shields.io/badge/🏗️_ARQUITETURA-MODULAR-38bdf8?style=for-the-badge&labelColor=0a0a0c" alt="Arquitetura Modular" />
-  </a>
-  <a href="#-métricas-de-desempenho-medidas-hardware-real">
-    <img src="https://img.shields.io/badge/📊_TELEMETRIA-BENCHMARKS-10b981?style=for-the-badge&labelColor=0a0a0c" alt="Telemetria e Benchmarks" />
-  </a>
-</p>
+[![Python 3.10+](https://img.shields.io/badge/Python-3.10+-3776AB?style=flat-square&logo=python&logoColor=white)](https://www.python.org/)
+[![CUDA float16](https://img.shields.io/badge/CUDA-float16-76B900?style=flat-square&logo=nvidia&logoColor=white)](https://developer.nvidia.com/cuda-toolkit)
+[![PySide6](https://img.shields.io/badge/PySide6-Liquid_Glass-41CD52?style=flat-square&logo=qt&logoColor=white)](https://doc.qt.io/qtforpython-6/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue?style=flat-square)](LICENSE)
+
+[⚡ Como Fazer Funcionar](#-como-fazer-funcionar) • [📊 Métricas & Benchmarks](BENCHMARKS.md) • [🏗️ Arquitetura](#️-arquitetura-e-estrutura-de-arquivos) • [🧪 Testes](#-executando-os-testes-automatizados)
 
 ---
 
@@ -48,17 +35,13 @@ Desenvolvido a partir de engenharia reversa clean-room via metodologia **REA (Re
 
 ---
 
-## ⚡ Métricas de Desempenho Medidas (Hardware Real)
+## ⚡ Métricas de Desempenho & Telemetria
 
-Valores auditados e homologados em bancada com **AMD Ryzen 5 3600 (6c/12t)**, **16 GB RAM DDR4** e **NVIDIA GeForce GTX 1650 (4 GB VRAM)**:
+Os benchmarks de latência (~580 ms no modo rápido / ~3.2 s em `large-v3-turbo`), consumo de VRAM e acurácia foram auditados e homologados em hardware real (**AMD Ryzen 5 3600** + **NVIDIA GeForce GTX 1650 4GB**).
 
-| Modo de Operação | Modelo Whisper | Dispositivo | Precisão | Latência Ponta a Ponta | Uso de VRAM | Acurácia em PT-BR |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Modo Rápido** *(Padrão)* | `base` | CUDA (GTX 1650) | `float16` | **~580 ms** | ~450 MB | Alta (pontuação básica nativa) |
-| **Modo Produção** *(Recomendado)* | `large-v3-turbo` | CUDA (GTX 1650) | `float16` | **~3.2 s – 4.5 s** | ~1.8 GB | **Nível Humano (Zero alucinações)** |
-| **Modo Balanceado** | `small` | CUDA (GTX 1650) | `float16` | **~1.1 s – 1.4 s** | ~900 MB | Média/Alta |
-| **Modo Refinado** | `base` + Ollama `qwen3.5:2b` | CUDA + Ollama | `float16` | **~4.7 s** | ~2.4 GB | Muito Alta (estilização semântica LLM) |
-| **Modo CPU (Fallback)** | `base` | CPU (Ryzen 5 3600) | `int8` | **~1.1 s** | 0 MB VRAM | Alta |
+Para consultar a matriz comparativa completa entre modelos, consumo de memória e tempos de cada etapa:
+
+[![Ver Relatório Completo de Benchmarks](https://img.shields.io/badge/📊_VER_RELATÓRIO_DE_BENCHMARKS-BENCHMARKS.md-10b981?style=for-the-badge&labelColor=0a0a0c)](BENCHMARKS.md)
 
 ---
 
@@ -105,6 +88,7 @@ wasper/
 ├── run_wasper.bat                # Menu interativo em lote para console
 ├── requirements.txt              # Dependências Python pinadas e validadas
 ├── wasper_config.json            # Configuração persistente (atalho, microfone, modelo)
+├── BENCHMARKS.md                 # 📊 Relatório técnico de desempenho e telemetria
 └── .gitignore                    # Regras de proteção de repositório
 ```
 
