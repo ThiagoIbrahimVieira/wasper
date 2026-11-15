@@ -1,0 +1,44 @@
+﻿# Ambientes virtuais Python
+.venv/
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# Bytecode e caches Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Logs e arquivos de execução
+*.log
+wasper_boot.log
+wasper_crash.log
+wasper_fatal.log
+*.lock
+wasper.lock
+
+# Arquivos de áudio e amostras
+*.wav
+*.mp3
+teste_curto.mp3
+teste_longo.mp3
+
+# Experimentos de engenharia reversa
+clone-1/
+
+# IDEs e editores de código
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Arquivos temporários de sistema operacional
+.DS_Store
+Thumbs.db
+desktop.ini
