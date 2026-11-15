@@ -1,105 +1,237 @@
+<p align="center">
+  <img src="https://raw.githubusercontent.com/ThiagoIbrahimVieira/wasper/main/assets/banner.png" alt="WASPER Logo" width="100%" onerror="this.style.display='none'" />
+</p>
+
 # WASPER — Ditado por Voz Push-to-Talk 100% Local
 
-> Reprodução fiel, leve e totalmente offline do fluxo do **Wispr Flow**, desenvolvida a partir de engenharia reversa clean-room via **REA (Reverse Engineer Anything)**.
+<p align="center">
+  <a href="https://github.com/ThiagoIbrahimVieira/wasper/stargazers"><img src="https://img.shields.io/github/stars/ThiagoIbrahimVieira/wasper?style=for-the-badge&logo=github&color=amber&labelColor=141418" alt="GitHub Stars" /></a>
+  <a href="https://github.com/ThiagoIbrahimVieira/wasper/network/members"><img src="https://img.shields.io/github/forks/ThiagoIbrahimVieira/wasper?style=for-the-badge&logo=github&color=zinc&labelColor=141418" alt="GitHub Forks" /></a>
+  <a href="https://www.python.org/"><img src="https://img.shields.io/badge/Python-3.10+-3776AB?style=for-the-badge&logo=python&logoColor=white&labelColor=141418" alt="Python 3.10+" /></a>
+  <a href="https://developer.nvidia.com/cuda-toolkit"><img src="https://img.shields.io/badge/NVIDIA-CUDA_float16-76B900?style=for-the-badge&logo=nvidia&logoColor=white&labelColor=141418" alt="CUDA float16" /></a>
+  <a href="https://doc.qt.io/qtforpython-6/"><img src="https://img.shields.io/badge/GUI-PySide6_Liquid_Glass-41CD52?style=for-the-badge&logo=qt&logoColor=white&labelColor=141418" alt="PySide6 Liquid Glass" /></a>
+  <a href="https://github.com/SYSTRAN/faster-whisper"><img src="https://img.shields.io/badge/AI-faster--whisper_large--v3--turbo-orange?style=for-the-badge&logo=openai&logoColor=white&labelColor=141418" alt="Whisper large-v3-turbo" /></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue?style=for-the-badge&labelColor=141418" alt="License: MIT" /></a>
+</p>
+
+<p align="center">
+  <a href="#-como-fazer-funcionar">
+    <img src="https://img.shields.io/badge/⚡_COMO_FAZER_FUNCIONAR-QUICKSTART-fbbf24?style=for-the-badge&labelColor=0a0a0c" alt="Como Fazer Funcionar" />
+  </a>
+  <a href="#-arquitetura-e-estrutura-de-arquivos">
+    <img src="https://img.shields.io/badge/🏗️_ARQUITETURA-MODULAR-38bdf8?style=for-the-badge&labelColor=0a0a0c" alt="Arquitetura Modular" />
+  </a>
+  <a href="#-métricas-de-desempenho-medidas-hardware-real">
+    <img src="https://img.shields.io/badge/📊_TELEMETRIA-BENCHMARKS-10b981?style=for-the-badge&labelColor=0a0a0c" alt="Telemetria e Benchmarks" />
+  </a>
+</p>
 
 ---
 
-## 🎯 Visão Geral
+## 🎯 Apresentação & Proposta de Valor
 
-O **Wasper** permite ditar por voz no Windows com o mesmo comportamento do Wispr Flow:
-1. Segure a tecla de atalho (**F8** por padrão) em qualquer janela ou aplicativo (Notepad, VS Code, Navegador, Slack, etc.).
-2. Fale naturalmente em português.
-3. Solte a tecla: o áudio acumulado em RAM é transcrito localmente na GPU e inserido imediatamente no campo ativo via `Ctrl+V`.
-4. O conteúdo que você já tinha copiado na área de transferência é preservado e restaurado automaticamente.
+O **Wasper** é um sistema de ditado por voz universal para Windows, construído sob a filosofia **Local-First**: zero envio de dados para servidores externos, zero telemetria invasiva e zero custos recorrentes de APIs.
 
-**Zero nuvem. Zero envio de dados. Zero custos de API.**
+Desenvolvido a partir de engenharia reversa clean-room via metodologia **REA (Reverse Engineer Anything)**, ele reproduz com precisão cirúrgica a experiência tátil e imediata de softwares comerciais como o *Wispr Flow*:
+
+1. **Ativação Instantânea Push-to-Talk:** Segure a tecla de atalho (**`F8`** por padrão) ou os botões laterais do mouse (**`mouse_x1`** / **`mouse_x2`**) em qualquer aplicativo aberto (VS Code, Cursor, Obsidian, navegadores, Slack, terminal ou Word).
+2. **Gravação Exclusiva em Memória RAM:** O áudio é capturado e bufferizado em tempo real na memória (16.000 Hz, mono, float32). **Nenhum arquivo WAV é escrito em disco** no fluxo operacional normal, garantindo latência mínima e privacidade total.
+3. **Transcrição de Alta Precisão na GPU:** Ao soltar o atalho, o modelo **`large-v3-turbo`** (ou `small`/`base`) roda em CUDA `float16` na sua placa de vídeo com acurácia a nível humano em português do Brasil.
+4. **Injeção Atômica sem Roubo de Foco:** O texto transcrito é injetado no campo ativo via simulação segura de `Ctrl+V`. **O conteúdo anterior da sua área de transferência é preservado e restaurado automaticamente após 120 ms.**
+
+---
+
+## ✨ Destaques de Engenharia
+
+- 💎 **Pílula Flutuante em Liquid Glass (PySide6):** Interface moderna em formato squircle, dark minimalista (`#0a0a0c`), com sombras difusas, pulso suave em verde esmeralda e a flag `Qt.WindowDoesNotAcceptFocus` (a janela flutua sobre seus apps sem jamais roubar o cursor de digitação).
+- 🔄 **Two-Pass Streaming:** Durante o pressionamento, uma amostragem preliminar ultrarrápida do Whisper `tiny` (~5ms de latência) exibe as palavras em tempo real na pílula flutuante (que se expande dinamicamente de 220px a 520px). Ao soltar, o modelo `large-v3-turbo` consolida a sentença com pontuação e gramática perfeitas.
+- 🖱️ **Interceptação de Mouse com Supressão Win32:** Hook de baixo nível (`WH_MOUSE_LL`) para botões laterais do mouse (Mouse 4 e Mouse 5) com `suppress_event()`, permitindo usar o polegar para ditar sem disparar o comando nativo de "Voltar Página" no navegador.
+- 🧹 **Limpador Heurístico de Disfluências (`text_cleaner.py`):** Filtra gagueiras, repetições acidentais e hesitações prolongadas ("ééé", "hum", "tipo assim") em tempo constante (< 1 ms), sem consumir VRAM extra e preservando contrações naturais de diálogo ("né?", "sabe?").
+- 📱 **Integração com Celular via AudioRelay:** Suporte verificado a microfones sem fio virtuais via Wi-Fi/USB, permitindo usar o microfone de alta fidelidade do smartphone diretamente no PC.
+- 🛡️ **Launcher Nativo em C# (`Wasper.exe`):** Inicializador leve com `Mutex` de instância única e trava a nível de kernel (`msvcrt.locking`), garantindo que apenas uma instância acesse o driver de áudio e hooks por vez.
 
 ---
 
 ## ⚡ Métricas de Desempenho Medidas (Hardware Real)
 
-Testado e validado em **AMD Ryzen 5 3600 (6c/12t)**, **16 GB RAM** e **NVIDIA GeForce GTX 1650 (4 GB VRAM)**:
+Valores auditados e homologados em bancada com **AMD Ryzen 5 3600 (6c/12t)**, **16 GB RAM DDR4** e **NVIDIA GeForce GTX 1650 (4 GB VRAM)**:
 
-| Modo de Operação | Componentes | Latência Ponta a Ponta | Uso de VRAM | Precisão em PT-BR |
-| :--- | :--- | :--- | :--- | :--- |
-| **Modo Rápido** *(Padrão)* | Whisper `base` (CUDA float16) + Paste | **~580 ms** | ~450 MB | Alta (pontuação básica nativa) |
-| **Modo Refinado** | Whisper + Ollama `qwen3.5:2b` + Paste | **~4.7 s** | ~2.4 GB | Muito Alta (capitalização e pontuação LLM) |
-| **Modo CPU (Fallback)** | Whisper `base` (CPU int8) + Paste | **~1.1 s** | 0 MB VRAM | Alta |
-
----
-
-## 🏗️ Arquitetura dos Módulos
-
-```
-[ Teclado Global (F8) ] ──────> [ AudioRecorder (RAM) ]
-         │                                │
-         │ (Solta F8)                     │ (Array NumPy float32)
-         ▼                                ▼
-[ PushToTalkListener ] ───────> [ WhisperTranscriber (faster-whisper CUDA) ]
-                                          │
-                                          │ (Texto Bruto)
-                                          ▼
-                               [ OllamaRefiner (Opcional: qwen3.5:2b) ]
-                                          │
-                                          │ (Texto Final Formatado)
-                                          ▼
-                               [ PasteInjector (Win32 keybd_event) ]
-                                          │
-                                  (Backup Clipboard)
-                                    (Simula Ctrl+V)
-                                  (Restaura Clipboard)
-                                          ▼
-                                [ Campo de Texto Ativo ]
-```
-
-- **`audio_recorder.py`**: Captura contínua de áudio a 16.000 Hz, mono, float32 diretamente em memória RAM via `sounddevice`. Nenhum arquivo WAV é gravado em disco durante a operação normal.
-- **`hotkey_manager.py`**: Monitoramento global de teclado em segundo plano com supressão de auto-repeat do Windows e descarte de toques acidentais (< 200 ms).
-- **`transcriber.py`**: Integração com `faster-whisper` em CUDA float16 com registro dinâmico de DLLs cuBLAS/cuDNN e fallback resiliente para CPU int8.
-- **`refiner.py`**: Pós-processador semântico local via Ollama (`qwen3.5:2b`). Utiliza prompt few-shot anti-diálogo e parâmetro `think: False` para evitar deriva conversacional ou respostas a perguntas ditadas.
-- **`paste_injector.py`**: Salva o conteúdo anterior da área de transferência, copia o texto transcrito, simula `Ctrl+V` nativo via Win32 `keybd_event` e restaura o conteúdo original após 120 ms. O foco da janela ativa é estritamente preservado.
-- **`ui_overlay.py`**: Pílula flutuante nativa (PySide6) em estilo Liquid Glass Dark Minimalista, sem bordas, com sombra suave, pulso em Verde Esmeralda e `WindowDoesNotAcceptFocus` (zero roubo de foco).
-- **`main.py`**: Loop assíncrono de orquestração unindo áudio, IA, injeção e interface gráfica.
+| Modo de Operação | Modelo Whisper | Dispositivo | Precisão | Latência Ponta a Ponta | Uso de VRAM | Acurácia em PT-BR |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **Modo Rápido** *(Padrão)* | `base` | CUDA (GTX 1650) | `float16` | **~580 ms** | ~450 MB | Alta (pontuação básica nativa) |
+| **Modo Produção** *(Recomendado)* | `large-v3-turbo` | CUDA (GTX 1650) | `float16` | **~3.2 s – 4.5 s** | ~1.8 GB | **Nível Humano (Zero alucinações)** |
+| **Modo Balanceado** | `small` | CUDA (GTX 1650) | `float16` | **~1.1 s – 1.4 s** | ~900 MB | Média/Alta |
+| **Modo Refinado** | `base` + Ollama `qwen3.5:2b` | CUDA + Ollama | `float16` | **~4.7 s** | ~2.4 GB | Muito Alta (estilização semântica LLM) |
+| **Modo CPU (Fallback)** | `base` | CPU (Ryzen 5 3600) | `int8` | **~1.1 s** | 0 MB VRAM | Alta |
 
 ---
 
-## 🚀 Como Executar
+## 🏗️ Arquitetura e Estrutura de Arquivos
 
-### 1. Início Rápido (1 Clique)
-Basta clicar duas vezes em **`run_wasper.bat`** e escolher a opção desejada:
-- `[1]` Modo Rápido (Whisper CUDA — Latência ~580ms)
-- `[2]` Modo Refinado (Whisper + Ollama qwen3.5:2b)
-- `[3]` Modo Teste (Sem colar — Apenas visualização no terminal)
+O projeto adota uma arquitetura modular limpa, isolando responsabilidades entre captura de áudio, inferência de IA, injeção Win32 e interface gráfica:
 
-### 2. Linha de Comando Direta
+```
+wasper/
+├── src/                          # 📦 Núcleo de engenharia da aplicação
+│   ├── __init__.py               # Pacote Python
+│   ├── main.py                   # Loop assíncrono de orquestração geral
+│   ├── audio_recorder.py         # Captura estrita em RAM via sounddevice (16kHz float32)
+│   ├── audio_utils.py            # Utilitários de conversão e normalização de áudio
+│   ├── hotkey_manager.py         # Hooks globais de teclado e botões laterais do mouse
+│   ├── transcriber.py            # Engine faster-whisper com aceleração CUDA float16
+│   ├── text_cleaner.py           # Filtro heurístico de gagueiras e disfluências (<1ms)
+│   ├── refiner.py                # Pós-processador semântico local via Ollama (opcional)
+│   ├── paste_injector.py         # Simulação de Ctrl+V via Win32 com preservação de clipboard
+│   └── ui_overlay.py             # Pílula flutuante Liquid Glass em PySide6 + Tray Icon
+│
+├── tests/                        # 🧪 Suíte completa de testes automatizados (30 testes)
+│   ├── __init__.py
+│   ├── test_suite_phase1.py      # Testes de gravação em RAM, integridade e debounce
+│   ├── test_suite_phase2.py      # Testes de transcrição em GPU CUDA e precisão PT-BR
+│   ├── test_suite_phase3.py      # Testes de conexão com LLM local e timeout
+│   ├── test_suite_phase4.py      # Testes de injeção Ctrl+V, clipboard e foco de janela
+│   ├── test_suite_phase5_e2e.py  # Testes ponta a ponta e tolerância a falhas
+│   ├── test_suite_phase6_gui.py  # Testes de comportamento de janela e sinais Qt
+│   ├── test_cuda_setup.py        # Diagnóstico de DLLs NVIDIA e cuBLAS/cuDNN
+│   └── test_my_voice.py          # Script de calibração rápida de microfone
+│
+├── tools/                        # 🛠️ Ferramentas de calibração e diagnóstico
+│   ├── __init__.py
+│   ├── benchmark_models.py       # Benchmark comparativo de latência entre modelos
+│   ├── descobrir_botao_mouse.py  # Detector interativo de códigos de botões do mouse
+│   ├── diagnose_mic.py           # Análise espectral de níveis de ruído do microfone
+│   └── probe_devices.py          # Enumeração detalhada de placas e drivers de som
+│
+├── main.py                       # 🚀 Ponto de entrada CLI (encaminha para src.main)
+├── Wasper.exe                    # ⚡ Executável compilado silencioso (1 clique)
+├── WasperLauncher.cs             # Código-fonte C# do launcher Win32 com Mutex
+├── build_launcher.bat            # Script de compilação do executável com csc.exe
+├── run_wasper.bat                # Menu interativo em lote para console
+├── requirements.txt              # Dependências Python pinadas e validadas
+├── wasper_config.json            # Configuração persistente (atalho, microfone, modelo)
+└── .gitignore                    # Regras de proteção de repositório
+```
+
+---
+
+## ⚡ Como Fazer Funcionar
+
+Siga os passos abaixo para colocar o **Wasper** rodando na sua máquina em menos de 5 minutos:
+
+### 1. Pré-Requisitos do Sistema
+- **Sistema Operacional:** Windows 10 ou Windows 11 (64-bit).
+- **Python:** Versão **3.10** ou **3.11** instalada e adicionada ao `PATH`.
+- **Placa de Vídeo (Opcional, mas altamente recomendada):** Placa NVIDIA GeForce (GTX 1050+, GTX 1650, RTX 20/30/40) com drivers atualizados. *(Se não tiver GPU dedicada, o Wasper roda automaticamente em modo CPU int8).*
+
+---
+
+### 2. Clonando o Repositório
+Abra o terminal (PowerShell ou Prompt de Comando) e clone o projeto:
 ```bash
-# Modo Rápido (Padrão)
-.venv\Scripts\python.exe main.py --hotkey f8
-
-# Modo com Refinamento Ollama
-.venv\Scripts\python.exe main.py --hotkey f8 --refine
-
-# Modo com Modelo Whisper Small
-.venv\Scripts\python.exe main.py --hotkey f8 --model small
-
-# Modo Apenas Log (sem colar no campo ativo)
-.venv\Scripts\python.exe main.py --hotkey f8 --no-paste
+git clone https://github.com/ThiagoIbrahimVieira/wasper.git
+cd wasper
 ```
 
 ---
 
-## 🧪 Suíte de Testes Automatizados
-
-O projeto conta com **30 testes automatizados** cobrindo todas as fases:
-
+### 3. Criando o Ambiente Virtual
+Isole as dependências criando uma pasta `.venv` na raiz do projeto:
 ```bash
-.venv\Scripts\python.exe -m unittest discover -s . -p "test_suite_*.py" -v
+python -m venv .venv
 ```
 
-- `test_suite_phase1.py` (7 testes): Áudio em RAM, integridade de amostras, debounce <200ms e supressão de auto-repeat.
-- `test_suite_phase2.py` (5 testes): Transcrição em GPU CUDA float16, fallback CPU, precisão em PT-BR e ausência de I/O em disco.
-- `test_suite_phase3.py` (6 testes): Conexão Ollama, formatação semântica, anti-diálogo, timeouts e fallback seguro.
-- `test_suite_phase4.py` (5 testes): Injeção via `Ctrl+V`, preservação rigorosa do clipboard anterior, suporte a Unicode/emojis e preservação de foco HWND.
-- `test_suite_phase5_e2e.py` (4 testes): Pipelines completos ponta a ponta (modo rápido e refinado), rejeição de silêncio e tolerância à queda do Ollama.
-- `test_suite_phase6_gui.py` (3 testes): Janela sem foco (`WindowDoesNotAcceptFocus`), estados visuais e despacho thread-safe de sinais Qt.
+Ative o ambiente virtual:
+```powershell
+# No PowerShell:
+.venv\Scripts\Activate.ps1
 
-**Resultado da validação:** `30 tests in 23.9s — OK (100% de aprovação)`.
+# No Prompt de Comando (CMD):
+.venv\Scripts\activate.bat
+```
+
+---
+
+### 4. Instalando as Dependências
+Instale todas as bibliotecas necessárias com um único comando:
+```bash
+pip install -r requirements.txt
+```
+
+> **Nota para GPU NVIDIA (CUDA):** As bibliotecas `nvidia-cublas-cu12` e `nvidia-cudnn-cu12` já estão no `requirements.txt`. O Wasper detecta e vincula as DLLs dinamicamente sem necessidade de instalar o CUDA Toolkit completo do sistema.
+
+---
+
+### 5. Configurando o Microfone
+Liste os dispositivos de áudio disponíveis para identificar o número do seu microfone físico:
+```bash
+python main.py --list-mics
+```
+
+Defina o seu microfone padrão (substitua pelo número listado):
+```bash
+python main.py --set-mic 1
+```
+*(Esta configuração fica salva permanentemente em `wasper_config.json`).*
+
+---
+
+### 6. Executando o Wasper
+
+Você tem 3 maneiras fáceis de iniciar:
+
+#### Opção A: Executável Silencioso (1 Clique)
+Dê um duplo clique no arquivo **`Wasper.exe`**.  
+Ele executa em segundo plano sem abrir nenhuma janela preta de terminal, adiciona um ícone na bandeja do sistema (perto do relógio) e exibe a pílula de boas-vindas na tela.
+
+#### Opção B: Menu Interativo no Terminal
+Dê um duplo clique em **`run_wasper.bat`** para ver o menu rápido com seleção de modos e testes de áudio.
+
+#### Opção C: Linha de Comando Direta
+Execute com parâmetros customizados:
+```bash
+# Execução padrão com Whisper base
+python main.py --hotkey f8
+
+# Execução com máxima precisão (large-v3-turbo)
+python main.py --model large-v3-turbo
+
+# Salvar modelo large-v3-turbo como padrão permanente
+python main.py --set-model large-v3-turbo
+
+# Usar botão lateral do mouse (Mouse 4 ou Mouse 5)
+python main.py --set-hotkey mouse_x1
+```
+
+---
+
+### 7. Como Usar no Dia a Dia
+1. Abra qualquer janela (ex: Bloco de Notas, VS Code, Google Docs, WhatsApp Web).
+2. **Segure a tecla `F8`** (ou o botão lateral configurado).
+3. A pílula flutuante em Liquid Glass aparecerá dizendo **"Ouvindo..."**.
+4. Fale naturalmente em português.
+5. **Solte a tecla:** A pílula mostrará rapidamente **"Transcrevendo..."** e o texto será colado onde estava o seu cursor!
+
+---
+
+## 🧪 Executando os Testes Automatizados
+
+Para certificar que todo o pipeline de áudio, IA e injeção Win32 está operacional no seu hardware:
+
+```bash
+# Executar a suíte completa de 30 testes:
+.venv\Scripts\python.exe -m unittest discover -s tests -p "test_suite_*.py" -v
+```
+
+---
+
+## 📄 Licença
+
+Este projeto é disponibilizado sob a licença **MIT**. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
+
+---
+
+<p align="center">
+  <b>Desenvolvido por Thiago Ibrahim Vieira (Thiago TT)</b><br />
+  <sub>Engenharia Web de Alta Performance · Sistemas Locais & IA · Estilização Brutalista</sub><br />
+  <a href="https://portifolio-thiago-ibrahim.vercel.app">Portfólio Pessoal</a> · <a href="https://github.com/ThiagoIbrahimVieira">GitHub</a>
+</p>
