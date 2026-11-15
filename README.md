@@ -1,7 +1,3 @@
-<p align="center">
-  <img src="https://raw.githubusercontent.com/ThiagoIbrahimVieira/wasper/main/assets/banner.png" alt="WASPER Logo" width="100%" onerror="this.style.display='none'" />
-</p>
-
 # WASPER — Ditado por Voz Push-to-Talk 100% Local
 
 <p align="center">
